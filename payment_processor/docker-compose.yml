@@ -1,0 +1,47 @@
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: payment_processor
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/payment_processor.sql:/docker-entrypoint-initdb.d/payment_processor.sql
+
+  api:
+    build:
+      context: .
+      dockerfile: PaymentAPI/Dockerfile
+    container_name: payment-api
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    ports:
+      - "5000:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+
+  worker:
+    build:
+      context: .
+      dockerfile: PaymentWorker/Dockerfile
+    container_name: payment-worker
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - acquirer-mock
+    environment:
+      DOTNET_ENVIRONMENT: Production
+
+  acquirer-mock:
+    build:
+      context: ../AcquirerMock
+      dockerfile: Dockerfile
+    container_name: acquirer-mock
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

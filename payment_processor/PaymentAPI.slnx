@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Integrations/Integrations.csproj" Id="8a1e0722-e2aa-49a7-90d6-d9c99a973950" />
+    <Project Path="Persistence/Persistence.csproj" />
+  </Folder>
+  <Project Path="Application/Application.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="PaymentAPI/PaymentAPI.csproj" />
+  <Project Path="PaymentWorker/PaymentWorker.csproj" Id="4e818b97-0d6b-41bc-a0e0-471bb387dc76" />
+</Solution>
