@@ -7,17 +7,17 @@
 
 ## Ejecución
 
-Desde la carpeta PaymentAPI:
+Desde la carpeta payment_processor:
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
 ## API
 
 Disponible en:
 
-http://localhost:4001
+http://localhost:5000
 
 ## Detener servicios
 
