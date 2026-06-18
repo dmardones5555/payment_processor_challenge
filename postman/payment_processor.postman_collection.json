@@ -1,0 +1,96 @@
+{
+  "info": {
+    "_postman_id": "1d4485e9-2ba5-4cfd-b1bf-cc681fe69d7a",
+    "name": "payment_processor",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "10211023"
+  },
+  "item": [
+    {
+      "name": "generate_payment",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"merchantId\": \"MRC001\",\r\n    \"amount\": 9350,\r\n    \"currency\": \"CLP\",\r\n    \"card\": {\r\n        \"number\": \"\",\r\n        \"expiry\": \"\",\r\n        \"cvv\": \"\"\r\n    },\r\n    \"idempotencyKey\": \"DEF456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5000/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_payment_history",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/payments?merchant_id=MRC001&status=",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "merchant_id",
+              "value": "MRC001"
+            },
+            {
+              "key": "status",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_payments_filtered",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/payments/569ad99b-23fc-4594-bc33-fa12b923d972",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "payments",
+            "569ad99b-23fc-4594-bc33-fa12b923d972"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
