@@ -161,13 +161,22 @@ Adaptadores hacia servicios externos.
 
 ### AcquirerMock
 
-Servicio independiente (Minimal API) que **simula el adquirente** para pruebas locales. Decide la respuesta según los últimos 4 dígitos de la tarjeta:
+Servicio independiente (Minimal API) que **simula el adquirente** para pruebas locales.
 
-| `CardLast4` | Resultado |
-| ----------- | --------- |
-| `1111`      | `APPROVED` |
-| `2222`      | `DECLINED` (código `05`, "Do not honor") |
-| Cualquier otro | `APPROVED` |
+A diferencia de versiones anteriores (donde la respuesta se determinaba según los últimos 4 dígitos de la tarjeta, `CardLast4`), ahora `Api/AuthorizeService.cs` genera una **respuesta probabilística aleatoria** en cada autorización, independiente de los datos de la tarjeta. Esto permite ejercitar de forma realista todas las rutas del worker (aprobaciones, rechazos y latencia/timeouts) sin depender de tarjetas concretas.
+
+En cada llamada se selecciona un valor de un arreglo ponderado `{ 1, 1, 1, 1, 1, 2, 2, 3, 4, 5 }`, lo que produce la siguiente distribución:
+
+| Caso (`prob`) | Probabilidad | Respuesta del mock |
+| ------------- | ------------ | ------------------ |
+| `1` | 50 % (5/10) | `APPROVED` — `AuthorizationCode = AUTH123`, `ResponseCode = 00` ("Approved") |
+| `2` | 20 % (2/10) | `APPROVED` con **retardo de 2 s** (`Thread.Sleep(2000)`) — simula latencia/timeout del adquirente |
+| `3` | 10 % (1/10) | `DECLINED` — `ResponseCode = 51` ("Insufficient funds") |
+| `4` | 10 % (1/10) | `DECLINED` — `ResponseCode = 05` ("Transaction declined") |
+| `5` | 10 % (1/10) | `DECLINED` — `ResponseCode = 04` ("Retain card") |
+
+> Nota: el retardo de 2 s del caso `2` permite probar el comportamiento de timeouts y reintentos con backoff del `PaymentWorker` frente a respuestas lentas del adquirente.
+
 
 ### Base de datos
 
